@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <title>Slideshow</title>
+  <style>
+  /* Base */
+.group:after {
+  content: "";
+  display: table;
+  clear: both;
+}
+
+/* Slideshow */
+.slideshow {
+  width: 500px;
+  margin: 50px auto;
+  text-align: center;
+  overflow: hidden;
+}
+
+.slides {
+  position: relative;
+  list-style: none;
+  width: 300%;
+  padding: 0;
+  -webkit-transition: left .2s ease-out;
+}
+
+  .slides li {
+    float: left;
+    width: 500px;
+  }
+
+nav a {
+  color: #C30;
+  text-decoration: none;
+}
+
+  nav a:hover {
+    text-decoration: underline;
+  }
+
+.prev {
+  float: left;
+}
+
+.next {
+  float: right;
+}
+  </style>
+  </head>
+<body>
+  <div class="slideshow">
+    <h1>Slideshow</h1>
+    <ul class="slides group">
+    </ul>
+    <nav>
+      <a href="#" class="prev">&laquo; Previous</a>
+      <a href="#" class="next">Next &raquo;</a>
+    </nav>
+  </div>
+  <script src="http://code.jquery.com/jquery.js"></script>
+  <script>
+  var images = [
+  "http://placekitten.com/g/500/300",
+  "http://placekitten.com/g/500/301",
+  "http://placekitten.com/g/500/302"
+];
+
+
+$.each(images, function(i, value){
+
+    var li ="<li><img src="+value+" /></li>";
+    $('ul').append(li);
+});
+
+var index = 0;
+var title = $("h1");
+var slideshow = $(".slides");
+var slides = slideshow.find("li");
+var slideNum = slides.length;
+
+$("a").click(function () {
+  var isPrev = $(this).hasClass("prev");
+  function checkLimit(){
+    if(index==slideNum){index=0;}
+    else if(index<0){index=slideNum-1;}
+    }
+
+  if (isPrev) {
+    index--;
+    checkLimit();
+  } else {
+    index++;
+    checkLimit();
+  }
+
+  title.text("The index is " + index);
+  slideshow.css("left", (index * -100) + "%");
+
+  return false;
+});
+
+  </script>
+</body>
+</html>
