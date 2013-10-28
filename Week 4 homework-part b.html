@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset=utf-8 />
+  <title>JS Bin</title>
+  <link href='http://fonts.googleapis.com/css?family=Gochi+Hand' rel='stylesheet' type='text/css'>
+<style>
+.gallery {
+    list-style: none;
+    padding: 0;
+  }
+
+  .polaroid {
+    float: left;
+    width: 200px;
+    height: 200px;
+    padding: 10px;
+    margin: 10px;
+    text-align: center;
+    font-family: 'Gochi Hand', cursive;
+    border: 1px solid #333;
+    box-shadow: 0 0 6px #999;
+  }
+
+    .polaroid img {
+      max-width: 100%;
+      max-height: 300px;
+    }
+</style>
+
+</head>
+<body>
+  <ul class="gallery">
+    <li class="polaroid">
+      <img src="http://placekitten.com/g/400/300" alt="Awwww">
+      <p>Awwww</p>
+    </li>
+  </ul>
+<script src="http://ajax.googleapis.com/ajax/libs/jquery/2.0.2/jquery.min.js"></script>
+<script>
+$(document).ready(function() {
+  
+
+var kitties = [
+      { title: "Hello, Kitty!", image: "http://placekitten.com/g/400/302" },
+      { title: "Bad, Kitty!", image: "http://placekitten.com/g/400/304" },
+      { title: "Meow.", image: "http://placekitten.com/g/400/306" },
+      { title: "Not a dog.", image: "http://placekitten.com/g/400/308" }
+    ];
+  
+
+
+
+/* Loop through the kitties array */
+
+
+$.each(kitties, function(i,object){
+var polaroid = $('<li></li>');
+var imageElement = $('<img />');
+var label = $('<p></p>');
+
+label.text(object.title);
+
+imageElement.attr({
+  'src':object.image,
+  'alt':object.title
+});
+
+polaroid
+  .addClass('polaroid')
+  .append(imageElement)
+  .append(label)
+  .appendTo('ul.gallery');
+
+});
+
+});
+/* 
+ * Create the html you need to make other polaroids (using jQuery), and append them to the gallery */
+</script>
+</body>
+</html>
