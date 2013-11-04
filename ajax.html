@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html>
+<head>
+<style>
+/* Base */
+body {
+  font-family: Helvetica, Arial, sans-serif;
+  font-size: 14px;
+  color: white;
+}
+
+
+/* Layout */
+.weather {
+  position: relative;
+  width: 320px;
+  height: 568px;
+  background: #09c;
+  margin: 100px auto;
+}
+
+.group {
+  padding: 15px;
+  border-bottom: 1px solid #b1dafa;
+}
+
+.clear {
+  clear: both;
+}
+
+/* Form */
+form { position:relative;
+  padding: 10px;
+}
+
+.loading {
+  display: none;
+  font-size: 18px;
+  text-align: center;
+  margin: 60px 0;
+}
+
+  .loading img {
+    vertical-align: middle;
+    margin-left: 5px;
+  }
+
+/* Now */
+.now {
+  padding: 60px 0 30px 0;
+  text-align: center;
+}
+
+  .now h1 {
+    font-size: 24px;
+    margin-bottom: 5px;
+  }
+
+  .now h2 {
+    font-size: 72px;
+  }
+
+/* Today */
+.today header {
+  padding: 15px;
+  text-align: right;
+}
+
+
+/* Week */
+</style>
+
+<script src="http://code.jquery.com/jquery.min.js"></script>
+  <link href="http://getbootstrap.com/dist/css/bootstrap.css" rel="stylesheet" type="text/css" />
+  <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/meyer-reset/2.0/reset.css">
+  <title>iOS 7 Weather</title>
+</head>
+<body>
+  <article class="weather thunderstorm">
+     <form action="#">
+       <input type="text" class="form-control location" placeholder="Type a location...">
+       <div style="color:blue;cursor:pointer;" class="submitButton"> Submit</div></form>
+
+    <header class="now">
+      <h1>Chicago</h1>
+      <h2><span>74</span>&deg;</h2>
+    </header>
+
+    <div class="loading">Loading <img src="http://www.ajaxload.info/cache/00/99/CC/FF/FF/FF/24-0.gif"></div>
+
+  </article>
+
+  <script src="http://code.jquery.com/jquery.min.js"></script>
+  <script>
+$(document).ready(function () {
+
+  // Get form submission working up to the point of alerting the location's name
+
+  // Make sure you can add dummy data to the temp and city name
+  var location="";
+
+  $('.submitButton').click(function() {
+    var location = $('input.location').val();
+
+
+
+   var url = "http://api.openweathermap.org/data/2.5/weather?callback=?";
+  var data = {
+    q: location,
+    units: "imperial"
+  };
+
+  $.getJSON(url, data, function (response, status) {
+     $(".now h2").text(response.main.temp);
+     $(".now h1").text(response.name);
+  });
+
+});
+
+
+  });
+/*
+
+  var location = "Sydney";
+  var url = "http://api.openweathermap.org/data/2.5/weather?callback=?";
+  var data = {
+    q: location,
+    units: "imperial"
+  };
+
+  $.getJSON(url, data, function (response, status) {
+     $(".now h2").text(response.main.temp);
+     $(".now h1").text(response.name);
+  });
+
+});*/
+  </script>
+</body>
+</html>
