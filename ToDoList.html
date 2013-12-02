@@ -32,7 +32,11 @@ body { padding: 20px; }
     $(window).trigger("modelChanged");
   },
   edit: function (id, property, value){
-  var itemToEdit = _.where(this.todos, {id:"+id+" });
+  var itemToEdit = _.where(this.todos, {id:id});
+  console.log(itemToEdit);
+  console.log(property);
+  console.log(value);
+  console.log(itemToEdit.property);
   itemToEdit.property = value;
     $(window).trigger("modelChanged");
   },
