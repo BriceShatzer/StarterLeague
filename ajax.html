@@ -44,6 +44,9 @@ form { position:relative;
     vertical-align: middle;
     margin-left: 5px;
   }
+  button.submitButton{
+    color:blue;cursor:pointer;padding: 10px;
+  }
 
 /* Now */
 .now {
@@ -68,31 +71,40 @@ form { position:relative;
 
 
 /* Week */
+h3 {font-weight: bold !important;text-align:center;}
+.forecast_day{padding:10px;text-align: center;}
 </style>
 
 <script src="http://code.jquery.com/jquery.min.js"></script>
   <link href="http://getbootstrap.com/dist/css/bootstrap.css" rel="stylesheet" type="text/css" />
-  <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/meyer-reset/2.0/reset.css">
+  <link rel="stylesheet" href="http://cdnjs.cloudflare.com/ajax/libs/meyer-reset/2.0/reset.css">
   <title>iOS 7 Weather</title>
 </head>
 <body>
   <article class="weather thunderstorm">
      <form action="#">
        <input type="text" class="form-control location" placeholder="Type a location...">
-       <div style="color:blue;cursor:pointer;" class="submitButton"> Submit</div></form>
+       <button class="submitButton"> Submit</button></form>
 
     <header class="now">
       <h1>Chicago</h1>
       <h2><span>74</span>&deg;</h2>
     </header>
 
-    <div class="loading">Loading <img src="http://www.ajaxload.info/cache/00/99/CC/FF/FF/FF/24-0.gif"></div>
+    <div id="forecast" class="loading">Loading...</div>
 
   </article>
 
   <script src="http://code.jquery.com/jquery.min.js"></script>
   <script>
 $(document).ready(function () {
+  function getDayName(timestamp) {
+    var weekdays = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"],
+          dayNum = (new Date(timestamp * 1000)).getDay();
+
+    return weekdays[dayNum];
+}
+
 
   // Get form submission working up to the point of alerting the location's name
 
@@ -101,18 +113,37 @@ $(document).ready(function () {
 
   $('.submitButton').click(function() {
     var location = $('input.location').val();
+    var urlCurrent = "http://api.openweathermap.org/data/2.5/weather?callback=?";
+    var dataCurrent = {
+      q: location,
+      units: "imperial"
+    };
+    var urlForcast = "http://api.openweathermap.org/data/2.5/forecast/daily?callback=?";
+    var dataForcast = {
+      q: location,
+      units: "imperial",
+      cnt: 7
+    };
 
-
-
-   var url = "http://api.openweathermap.org/data/2.5/weather?callback=?";
-  var data = {
-    q: location,
-    units: "imperial"
-  };
-
-  $.getJSON(url, data, function (response, status) {
-     $(".now h2").text(response.main.temp);
+  $.getJSON(urlCurrent, dataCurrent, function (response, status) {
+  console.log(response);
+     $(".now h2").text(Math.round(response.main.temp));
      $(".now h1").text(response.name);
+  });
+
+  $.getJSON(urlForcast, dataForcast, function (response, status){
+    $('div.loading').removeClass('loading').html('<h3>Forecast</h3>');
+
+    console.log(response);
+    $.each(response.list, function() {
+      $('<div></div>')
+        .addClass('forecast_day')
+        .text('Day: '+getDayName(this.dt)+' | Min: '+this.temp.min+' | Max:'+this.temp.max)
+        .appendTo('#forecast');
+      console.log(this.temp.min);
+      console.log(this.temp.max)
+       /* iterate through array or object */
+    });
   });
 
 });

@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html>
+<head>
+<link href="http://getbootstrap.com/dist/css/bootstrap.css" rel="stylesheet" type="text/css" />
+<meta charset=utf-8 />
+<style>
+body { padding: 20px; }
+</style>
+<title>JS Bin</title>
+</head>
+<body>
+    <form action="#">
+      <input type="text" class="form-control" placeholder="What do you need to do?">
+    </form>
+    <p>Active Todos: <span class="count">0</span></p>
+    <ul class="todos"></ul>
+    <script src="http://code.jquery.com/jquery.js"></script>
+    <script src="http://documentcloud.github.io/underscore/underscore-min.js"></script>
+    <script id="todo-item" type="text/template">
+      <li data-todo-id="<%= id %>">
+        <input type="checkbox">
+        <%= name %>
+        <a class="remove" href="#">x</a>
+      </li>
+    </script>
+<script>
+    var list = {
+  todos: [],
+  completed:0,
+  add: function (todo) {
+    this.todos.push(todo);
+    $(window).trigger("modelChanged");
+  },
+  edit: function (id, property, value){
+  var itemToEdit = _.where(this.todos, {id:"+id+" });
+  itemToEdit.property = value;
+    $(window).trigger("modelChanged");
+  },
+  remove: function (id) {
+    this.todos = _.reject(this.todos, function (todo) {
+      return todo.id === id;
+    });
+    $(window).trigger("modelChanged");
+  },
+  count: function () {
+    return this.todos.length;
+  }
+};
+
+/* Form */
+$("form").submit(function () {
+  var inputVal = $(this).find("input").val(),
+      next = list.count();
+  
+  list.add({id: next, name: inputVal, done: false});
+ 
+  $(this).find("input").val("");
+  
+  return false;
+});
+
+/* Count */
+$(window).on("modelChanged", function () {
+  $(".count").text( list.count() - list.completed );
+});
+
+/* List */
+$(window).on("modelChanged", function () {
+  var $todos = $(".todos"),
+      template = _.template( $("#todo-item").html() );
+  
+  $todos.empty();
+  
+  $.each(list.todos, function (i, todo) {
+    $todos.append( template(todo) );
+  });
+});
+
+/* Remove */
+
+$('ul.todos').on('click', 'a.remove', function(){
+  var itemID = $(this).closest('li').data('todo-id');
+  list.remove(itemID);
+  $(window).trigger("modelChanged");
+});
+
+/* Completed */
+
+$('ul.todos').on('click', 'input[type="checkbox"]',function(){
+  var item = $(this).closest('li');
+  if( $(this).prop('checked')) {
+    
+    item.css('text-decoration','line-through');
+    list.edit(item.data('todo-id'), 'done', true);
+    console.log(list.todos);
+    list.completed = list.completed+1;
+  }
+/*
+  else {
+    item.css('text-decoration','none');
+    list.completed = list.completed-1;
+  }
+*/  
+
+  
+});
+
+</script>
+  </body>
+</html>
+
+
+<!-- Notes 
+//create edit function 
+function ( id, prop, val )
+
+//relevent item out of todos array
+var itemToAdjust = _.where(list.todos, {id:1})
+
+//adjust value 
+itemToAdjust.prop = val
